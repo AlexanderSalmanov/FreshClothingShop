@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'base/nav-filters.html' %}
+<div class="jumbotron bg-primary text-white text-center">
+  <h1 class='display-4'>All Products</h1>
+</div>
+  <div align='center'>
+    {% include 'products/snippets/paginator.html' %}
+  </div>
+  <div class="row">
+    {% for product in product_list %}
+    <div class="col-md-4">
+      {% include 'products/snippets/card.html' with instance=product cart=cart %}
+
+    </div>
+    {% endfor %}
+  </div>
+
+  <script type="text/javascript">
+    var updateCartForm = $('.update-cart-form')
+    updateCartForm.submit(function(event){
+      event.preventDefault();
+      var thisForm = $(this)
+      var formData = thisForm.serialize()
+      $.ajax({
+        url: "{% url 'carts:update' %}",
+        type: 'POST',
+        data: formData,
+        success: function(json){
+          var submitSpan = thisForm.find(".submit-span")
+          $('.cart-items').text(json.cart_items)
+          // document.querySelector('cart-items').innerHTML = json.cart_items
+
+          if(json.added){
+            submitSpan.html('<button type="submit" class="btn btn-secondary" name="button"><i class="fa fa-minus"></i> Remove from cart</button>')
+          }else{
+            submitSpan.html('<button type="submit" class="btn btn-light" name="button"><i class="fa fa-plus"></i> Add to cart</button>')
+          }
+        },
+        error: function(err) {}
+      })
+    })
+  </script>
+
+{% endblock %}

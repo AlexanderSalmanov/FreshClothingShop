@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="jumbotron bg-primary text-white text-center">
+  <h1 class='display-4'>{{category.title}} Category Items</h1>
+</div>
+
+  <div class="row">
+    {% for product in products %}
+    <div class="col-md-4">
+      {% include 'products/snippets/card.html' with instance=product %}
+    </div>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,18 @@
+<div class="card" style="width: 18rem;">
+  <img class="card-img-top" style='user-selectable: none; -webkit-user-select: none;' src="{{instance.image.url}}" alt="Card image cap">
+  <div class="card-body">
+    <div class="d-flex d-flex-inline justify-content-between">
+      <a href="{{instance.get_absolute_url}}">
+      <h5 class="card-title">{{instance.title}} | ${{instance.price}}</h5>
+      </a>
+      <p class='text-muted'><i class='fa fa-eye'></i> {{instance.times_viewed}}</p>
+    </div>
+
+    <p class="card-text">{{instance.description|truncatewords:12}}</p>
+    <div class="d-inline-flex p-2">
+      {% include 'products/snippets/update-cart.html' with cart=cart instance=product %}
+      <p class='text-muted pl-3'>{{product.timestamp|timesince}} ago</p>
+    </div>
+
+  </div>
+</div>
