@@ -1,0 +1,11 @@
+{% load bootstrap4 %}
+{% url 'accounts:register' as register_url %}
+<form enctype="multipart/form-data" action="{% if action_url %}{{action_url}}{% else %}{% url 'accounts:login' %}{% endif %}" method="post">
+  {% if next_url %}
+  <input type="hidden" name="next" value="{{next_url}}">
+  {% endif %}
+  {% csrf_token %}
+  {% bootstrap_form form %}
+
+  <input type="submit" class='btn btn-primary btn-block' value="{% if request.path == register_url %}Register{% else %}Login{% endif %}">
+</form>

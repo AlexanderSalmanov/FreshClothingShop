@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h1>Register</h1>
+
+    {% url 'accounts:register' as action_url %}
+    {% include 'accounts/snippets/form.html' with form=form next_url=request.build_absolute_uri action_url=action_url %}
+    <p class='text-muted'>Already have an account? <a href="{% url 'accounts:login' %}">Log In.</a></p>
+  </div>
+{% endblock %}

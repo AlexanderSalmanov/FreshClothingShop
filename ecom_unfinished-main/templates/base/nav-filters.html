@@ -1,0 +1,117 @@
+<nav class="nav nav-pills nav-justified bg-default text-white">
+
+  <a class="nav-item nav-link" href="#filterCollapse" role='button' aria-expaded='false' aria-controls='filterCollapse' data-toggle='collapse' ><i class='fa fa-area-chart'></i> Filters</a>
+  <a class="nav-item nav-link" href="#orderingCollapse" role='button' aria-expanded='false' aria-controls='orderingCollapse' data-toggle='collapse'><i class='fa fa-th-list'></i> Ordering</a>
+
+
+</nav>
+<div class="row">
+  <div class="col">
+    <div class="collapse" id="filterCollapse">
+      <div class="card card-body">
+        <h3 align='center'>Filter items</h3><hr>
+        <h4>By category <i class='fa fa-bar-chart'></i></h4>
+        <form class='category-form' method="get">
+        {% for category in categories %}
+
+
+
+        <div class="form-check form-check-inline">
+
+          <input name='category-choice' class="form-check-input" type="radio" id="inlineRadio{{forloop.counter}}" value="{{category.slug}}">
+          <label class="form-check-label" for="inlineRadio{{forloop.counter}}">{{category.title}}</label>
+
+        </div>
+        {% endfor %}
+        <button type="submit" class='btn btn-primary btn-lg' name="button">Apply</button>
+        </form>
+        <hr>
+        <h4>By Price <i class='fa fa-dollar'></i></h4>
+        <form class="price-range-form" action="{% url 'search:price' %}" method="get">
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="lower-range">From: </label>
+                <input type="number" class='form-control lower-range' placeholder="..." name='lower_range' value="">
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label for="top-range">Up to: </label>
+                <input type="number" class='form-control top-range' placeholder="..." name='top_range' value="">
+              </div>
+            </div>
+          </div>
+
+
+          <button type="submit" class='btn btn-lg btn-primary' name="button">Apply</button>
+        </form><hr>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="collapse" id="orderingCollapse">
+      <div class="card card-body">
+        <h3 align='center'>Order Items</h3><hr>
+        <h4>By Price <i class='fa fa-dollar'></i></h4>
+        <form class="price-order-form" action="{% url 'search:order' %}" method="get">
+          <div class="form-check form-check-inline">
+            <input name='price_order' class="form-check-input" type="radio" id="ascending" value="ascend">
+            <label class="form-check-label" for="ascending">Ascending</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input name='price_order' class="form-check-input" type="radio" id="descending" value="descend">
+            <label class="form-check-label" for="descending">Descending</label>
+          </div>
+          <button type="submit" class='btn btn-lg btn-primary' name="button">Apply</button>
+        </form><hr>
+        <h4>By Time <i class='fa fa-clock-o'></i></h4>
+        <form class="time-form" action="{% url 'search:order' %}" method="get">
+          <div class="form-check form-check-inline">
+            <input type="radio" name="time_order" class='form-check-input' id='recent' value="recent">
+            <label class='form-check-label' for="recent">From recent</label>
+          </div>
+          <div class="form-check form-check-inline">
+              <input type="radio" name="time_order" class='form-check-input' id='oldest' value="oldest">
+              <label class='form-check-label' for="oldest">From oldest</label>
+          </div>
+          <button type="submit" class='btn btn-lg btn-primary' name="button">Apply</button>
+        </form><hr>
+        <h4>By Popularity <i class='fa fa-line-chart'></i></h4>
+        <form class="popularity-form" action="{% url 'search:order' %}" method="get">
+          <div class="form-check form-check-inline">
+            <input type="radio" name="popularity_order" class='form-check-input' id='mp' value="mp">
+            <label class='form-check-label' for="mp">Most popular</label>
+          </div>
+          <div class="form-check form-check-inline">
+              <input type="radio" name="popularity_order" class='form-check-input' id='lp' value="lp">
+              <label class='form-check-label' for="lp">Least popular</label>
+          </div>
+          <button type="submit" class='btn btn-lg btn-primary' name="button">Apply</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var categoryForm = $('.category-form')
+  console.log(categoryForm)
+  categoryForm.submit(function(event){
+    event.preventDefault();
+    var thisForm = $(this)
+    var radioValue = thisForm.find("input[type='radio']:checked").val()
+    console.log(radioValue)
+    if(radioValue === undefined){
+      $.alert({
+        title: 'Error!',
+        content: 'Please, select the category!',
+        theme: 'modern'
+      })
+    }else{
+      window.location.href = '/products/category/' + radioValue
+    }
+
+
+  })
+</script>

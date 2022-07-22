@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="jumbotron">
+    <div class="row">
+      <div class="col-4">
+        <a href="{{request.META.HTTP_REFERER}}" class='btn btn-dark'>&#8592; Back to previous page</a>
+        <h1 class='pt-2'>{{product.title}} | {{product.price|floatformat:-2}}$</h1>
+        <p class='text-muted'>Seller: {{product.seller.email}}</p>
+        <hr>
+        <p class='lead'>{{product.description}}</p>
+      </div>
+      <div class="col-8" align='end'>
+        <img src="{{product.image.url}}" style='height:350px; width: 350px' alt="Product Image" style='user-selectable: none; -webkit-user-select: none;' ><br>
+        <div class="pt-3">
+          <div class="d-flex justify-content-between">
+            <button type="button" data-target='#deleteModal' data-toggle='modal' class='btn btn-danger'>Delete</button>
+            {% include 'products/snippets/delete_modal.html' with product=product %}
+            {% include 'products/snippets/update-cart.html' with instance=product cart=cart %}
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <hr>
+  <p align='center' class='text-muted'><i class='fa fa-eye'></i> {{product.times_viewed}}</p>
+
+  <script type="text/javascript">
+    var cartForm = $('.update-cart-form')
+    cartForm.submit(function(e){
+      e.preventDefault();
+      var thisForm = $(this)
+      var formData = thisForm.serialize()
+      $.ajax({
+        url: "{% url 'carts:update' %}",
+        type: 'POST',
+        data: formData,
+        success: function(json){
+          var submitSpan = thisForm.find('.submit-span')
+
+          $('.cart-items').text(json.cart_items)
+
+          if(json.added){
+            submitSpan.html('<button type="submit" class="btn btn-secondary" name="button"><i class="fa fa-minus"></i> Remove from cart</button>')
+          }
+          else{
+            submitSpan.html('<button type="submit" class="btn btn-light" name="button"><i class="fa fa-plus"></i> Add to cart</button>')
+          }
+        },
+        error: function(err) {}
+      })
+    })
+  </script>
+{% endblock %}

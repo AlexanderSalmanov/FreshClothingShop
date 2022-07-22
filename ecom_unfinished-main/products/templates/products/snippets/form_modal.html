@@ -1,0 +1,20 @@
+{% load bootstrap4 %}
+<div class="modal fade" role='dialog' id='productForm' tabindex='-1' aria-labelledby='productFormLabel' aria-hidden='true'>
+  <div class="modal-dialog" role='document'>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class='modal-title' id='productFormLabel'>Create New Product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form enctype='multipart/form-data' action="{% url 'products:new' %}" method="post">
+          {% csrf_token %}
+          {% bootstrap_form product_form %}
+          <button type="submit" class='btn btn-outline-success btn-lg'>Create</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

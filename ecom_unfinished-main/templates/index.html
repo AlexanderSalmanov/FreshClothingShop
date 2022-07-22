@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <!-- <div class="jumbotron bg-dark text-white text-center pt-5 mt-3">
+    <h1 class='display-1'>Welcome to the home page{% if user.is_authenticated %}, {{user.get_full_name}}{% endif %}!</h1>
+    <input type="range" max='1000' step='10' name="" value="">
+  </div> -->
+
+  <main class='pt-5 text-center'>
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+
+
+      <main role="main" class="inner cover">
+        <h1 class="cover-heading">Welcome to the home page{% if user.is_authenticated %}, {{user.get_full_name}}{% endif %}!</h1>
+        <p class="lead">This webpage was developed by team of young and ambitious NURE students: Alexander Salmanov, Rostislav Ignatov, Mykyta Kobylnik, and Serhii Shultsev.</p>
+        <p class='lead'>To start with, dive into the <i>products</i> section.</p>
+        <p class="lead">
+          <a href="{% url 'products:all' %}" class="btn btn-lg btn-secondary">Dive in!</a>
+        </p>
+      </main>
+
+
+    </div>
+  </main>
+
+
+{% endblock %}

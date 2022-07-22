@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% url 'accounts:login' as login_url %}
+
+{% block content %}
+  <h1>Checkout!  Order id: --{{order.order_id}}--</h1>
+
+  {% if not billing_profile %}
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Login</h3>
+      {% include 'accounts/snippets/form.html' with form=login_form next_url=request.build_absolute_uri  %}
+    </div>
+    <div class="col-md-6">
+      <h3>Continue as Guest</h3>
+      {% url 'accounts:guest_register' as guest_register_url %}
+      {% include 'accounts/snippets/form.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register_url %}
+    </div>
+  </div>
+
+  {% else %}
+
+
+  <div class="order-summary">
+    <h3>Order Summary</h3>
+    <hr>
+    <h3>Products:<br></h3>
+
+    <table class="table table-dark table-bordered">
+
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scole='col'>Item Image</th>
+      <th scope="col">Item Name</th>
+      <th scope="col">Item Price</th>
+      <th scope="col">Item Category</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for product in order.cart.products.all %}
+    <tr>
+      <th scope="row">{{forloop.counter}}</th>
+      <td>
+        <a href="{{product.get_absolute_url}}">
+        <img src="{{product.image.url}}" class='rounded' alt="Product Image Cap" style='height: 75px; width: 75px'>
+        </a>
+      </td>
+      <td>{{product.title}}</td>
+      <td>${{product.price}}</td>
+      <td>{{product.category.title}}</td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+
+</table>
+<div class="row">
+  <div class="col-3">
+    <h3>Shipping Total: </h3>
+    <h3>Order Total: </h3>
+  </div>
+  <div class="col-9" align='end'>
+    <h3>${{order.shipping_total}}</h3>
+    <h3>${{order.total}}</h3>
+  </div>
+</div>
+
+
+  </div>
+    {% endif %}
+
+{% endblock %}

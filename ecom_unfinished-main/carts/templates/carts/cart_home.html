@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  {% if cart.products.exists %}
+  <div class="jumbotron bg-info text-center text-white">
+    <h1 class='display-4'>Cart Summary</h1>
+
+  </div>
+        <main class='border border-dark bg-dark text-white'>
+        {% for product in cart.products.all %}
+
+
+
+        <div class="d-flex bd-higlight mb-3 border p-3 product-item" data-index='{{product.id}}'>
+          <div class="mr-auto p-2 bd-highlight">
+            <img src="{{product.image.url|default_if_none:'#'}}" class='img-fluid rounded' style='user-selectable: none; -webkit-user-select: none;' height='75px' width='75px' alt="prod-img">
+             <a href="{{product.get_absolute_url}}" class='h5 text-decoration-none text-reset'>{{product.title}}</a>
+           </div>
+
+          <div class="d-flex flex-column">
+              <div class="p-2 bd-highlight"><span class='h5 item-total'>Item cost: ${{product.price}}</span></div>
+              <div class="p-2 bd-highlight">
+                <p class='text-muted' style="text-decoration: underline; font-weight: 700; font-size: 1.2em;">Category: <i>{{product.category.title}}</i></p>
+              </div>
+              <div class="p-2 bd-highlight">
+                {% include 'carts/snippets/cart_update.html' with product_id=product.id %}
+              </div>
+          </div>
+
+
+
+        </div>
+        {% endfor %}
+        </main>
+        {% if cart.products.count != 0 %}
+        <div class="jumbotron bg-info text-dark pt-2 cart-summary" align='end'>
+          <h3 id='cart-subtotal-price'>Subtotal: ${{cart.subtotal}}</h3>
+          <h3 class='display-4' id='cart-total-price'>Total (5% shipping taxes included): ${{cart.total|floatformat:-2}}</h3><hr>
+          <a href="{% url 'carts:checkout_home' %}" class='btn btn-dark btn-lg mt-5'>Checkout</a>
+        </div>
+        {% endif %}
+
+  {% else %}
+  <div class="jumbotron bg-info text-white text-center">
+    <h2>Cart is empty</h2>
+  </div>
+
+  {% endif %}
+  <script type="text/javascript">
+    var cartRemoveForm = $('.cart-remove-form')
+    cartRemoveForm.submit(function(e){
+      e.preventDefault()
+      var thisForm = $(this)
+      var prodid = thisForm.data('index')
+      console.log(thisForm.serialize())
+      $.ajax({
+        url: "{% url 'carts:remove' %}",
+        type: 'POST',
+        data: thisForm.serialize(),
+        success: function(json){
+          $('.product-item[data-index="' + prodid + '"]').remove();
+          $('.cart-items').text(json.cart_items);
+          document.getElementById('cart-subtotal-price').innerHTML = 'Subtotal: $' + json.cart_subtotal;
+          document.getElementById('cart-total-price').innerHTML = 'Total (5% shipping taxes included): $' + json.cart_total_price.toFixed(2);
+        },
+        error: function(error) {},
+      })
+    })
+  </script>
+
+
+{% endblock %}
